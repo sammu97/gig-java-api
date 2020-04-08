@@ -1,14 +1,8 @@
 package com.jordan.gigjavaapi.dao;
 
 import com.jordan.gigjavaapi.model.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Random;
-
-public interface AccountDao {
-
-    int insertAccount(Account account);
-
-    List<Account> getAllAccounts();
+public interface AccountDao extends JpaRepository<Account,String> {
 
 }
