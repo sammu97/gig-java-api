@@ -1,6 +1,5 @@
 package com.jordan.gigjavaapi.api;
 
-import com.jordan.gigjavaapi.dao.AccountDao;
 import com.jordan.gigjavaapi.model.Account;
 import com.jordan.gigjavaapi.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class AccountController {
 
     @PostMapping
     public void addAccount(@RequestBody @Valid @NonNull Account account){
-        accountService.addAccount(account);
+        accountService.addOrUpdateAccount(account);
     }
 
     @GetMapping
