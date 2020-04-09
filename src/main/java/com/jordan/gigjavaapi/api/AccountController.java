@@ -35,4 +35,9 @@ public class AccountController {
     public void bankTransfer(@RequestBody @Valid @NonNull BankTransferDto transferDto) throws Exception {
         accountService.TransferBetweenAccount(transferDto);
     }
+
+    @RequestMapping(value = "balanceByAccountNo/{accountNumber}" , method = RequestMethod.GET)
+    public double getBalanceByAccountNo(@PathVariable String accountNumber){
+        return accountService.getAccountBalanceByAccountNumber(accountNumber);
+    }
 }

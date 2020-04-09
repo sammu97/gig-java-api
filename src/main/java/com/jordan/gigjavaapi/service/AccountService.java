@@ -54,4 +54,8 @@ public class AccountService {
 
         throw new Exception("One or more accounts do not exist!");
     }
+
+    public double getAccountBalanceByAccountNumber(String accountNumber){
+        return this.getAccountByAccountNo(accountNumber).get().balance;
+    }
 }
