@@ -37,7 +37,7 @@ printf "Retrieving Balance for Account Number '0000001'"
 balance_0000001=$(curl --request GET localhost:8080/api/account/balanceByAccountNo/0000001)
 printf "Balance for Account Number '0000001' is €%s\n" $balance_0000001
 
-if [ $balance_0000001 == 30000.0 ]
+if [ "$balance_0000001" == 30000.0 ]
 then
     printf "Balance is correct!\n\n"
 else
@@ -49,7 +49,7 @@ printf "Retrieving Balance for Account Number '0000002'"
 balance_0000002=$(curl --request GET localhost:8080/api/account/balanceByAccountNo/0000002)
 printf "Balance for Account Number '0000002' is €%s\n" $balance_0000002
 
-if [ $balance_0000002 == 0.0 ]
+if [ "$balance_0000002" == 0.0 ]
 then
     printf "Balance is correct!\n\n"
 else
