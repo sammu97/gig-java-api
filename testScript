@@ -5,25 +5,26 @@ mvn package
 printf "Build successfull!\n"
 
 printf "Now building docker image...\n"
-docker build -t gig-java-api
-docker run -d --rm gig-java-api
+docker build -t gig-java-api .
+docker run -d --rm -p 8080:8080 --name gig-java-api-container gig-java-api
 printf "Docker container is running\n\n"
 
+until [ "$(curl -w '%{response_code}' --no-keepalive -o /dev/null --connect-timeout 1 localhost:8080/heartbeatt)" == "200" ];
+do echo --- sleeping for 1 second;
+sleep 1;
+done
+
+printf "Web application has started! Begnning Test...\n\n"
+
 printf "Adding Account '0000001' with a balance of €20000\n"
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"balance": "20000","accountNumber": "0000001"}' \
-  localhost:8080/api/account/addOrUpdate
+addResponse1=$(curl --header "Content-Type: application/json" --request POST --data '{"balance": "20000","accountNumber": "0000001"}' localhost:8080/api/account/addOrUpdate)
 
 printf "\nAdding Account '0000002' with a balance of €10000\n"
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"balance": "10000","accountNumber": "0000002"}' \
-  localhost:8080/api/account/addOrUpdate
+addRespons2=$(curl --header "Content-Type: application/json" --request POST --data '{"balance": "10000","accountNumber": "0000002"}' localhost:8080/api/account/addOrUpdate)
 
 printf "\nGetting list of accounts within database now...\n"
 curl --request GET localhost:8080/api/account/getAll
-printf
+printf "\n"
 
 printf "\nMaking a bank transfer of €10000 from Account '0000002' to Account '0000001'\n"
 curl --header "Content-Type: application/json" \
@@ -32,15 +33,32 @@ curl --header "Content-Type: application/json" \
   localhost:8080/api/account/bankTransfer
 printf "Transfer completed!\n\n"
 
-print "Retrieving Balance for Account Number '0000001'"
-balance_0000001=(curl --request GET localhost:8080/api/account/balanceByAccountNo/0000001)
-printf "Balance for Account Number '0000002' is €%s\n\n" balance_0000001
+printf "Retrieving Balance for Account Number '0000001'"
+balance_0000001=$(curl --request GET localhost:8080/api/account/balanceByAccountNo/0000001)
+printf "Balance for Account Number '0000001' is €%s\n" $balance_0000001
 
-print "Retrieving Balance for Account Number '0000002'"
+if [ $balance_0000001 == 30000.0 ]
+then
+    printf "Balance is correct!\n\n"
+else
+    printf "Balance is incorrect! Test failed!\n\n"
+    exit 0
+fi
+
+printf "Retrieving Balance for Account Number '0000002'"
 balance_0000002=$(curl --request GET localhost:8080/api/account/balanceByAccountNo/0000002)
-printf "Balance for Account Number '0000002' is €%s\n" balance_0000002
+printf "Balance for Account Number '0000002' is €%s\n" $balance_0000002
 
+if [ $balance_0000002 == 0.0 ]
+then
+    printf "Balance is correct!\n\n"
+else
+    printf "Balance is incorrect! Test failed!\n\n"
+    exit 0
+fi
 
+printf "\nTests completed! Stopping container...\n"
+docker stop gig-java-api-container
 
 
 
