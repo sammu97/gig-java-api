@@ -1,5 +1,6 @@
 package com.jordan.gigjavaapi.service;
 
+import com.jordan.gigjavaapi.api.dtos.BankTransferDto;
 import com.jordan.gigjavaapi.dao.AccountDao;
 import com.jordan.gigjavaapi.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,14 @@ public class AccountService {
         return accountDao.findById(accountNo);
     }
 
-    public int TransferBetweenAccount(String senderAccountNo, String receiverAccountNo, double transferAmount) throws Exception {
-        Optional<Account> senderAccount = getAccountByAccountNo(senderAccountNo);
-        Optional<Account> receiverAccount = getAccountByAccountNo(senderAccountNo);
+    public int TransferBetweenAccount(BankTransferDto transferDto) throws Exception {
+        Optional<Account> senderAccount = getAccountByAccountNo(transferDto.senderAccountNo);
+        Optional<Account> receiverAccount = getAccountByAccountNo(transferDto.receiverAccountNo);
 
         //We are checking if both Accounts were found successfully
         if(senderAccount.isPresent() && receiverAccount.isPresent()){
-            senderAccount.get().balance -= transferAmount;
-            receiverAccount.get().balance += transferAmount;
+            senderAccount.get().balance -= transferDto.transferAmount;
+            receiverAccount.get().balance += transferDto.transferAmount;
 
             //ensure that the sender has enough money
             if(senderAccount.get().balance >= 0){
