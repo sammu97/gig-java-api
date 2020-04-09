@@ -53,6 +53,8 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+
+		<finalName>gig-java-api</finalName>
 	</build>
 
 </project>
