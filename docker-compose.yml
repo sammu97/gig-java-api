@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  java-api-mysql:
+    container_name: java-api-mysql
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: BankAccountsDB
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+  gig-java-api-container:
+    container_name: gig-java-api-container
+    build: ./
+    depends_on:
+      - java-api-mysql
+    ports:
+      - 8080:8080
+    entrypoint: "./wait-for-it.sh java-api-mysql:3306 -- java -jar /usr/local/lib/gig-java-api.jar"
