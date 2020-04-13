@@ -10,10 +10,10 @@ done
 
 printf "Web application has started! Beginning Test...\n\n"
 
-printf "Adding Account '0000001' with a balance of €20000\n"
+printf "Adding Account '0000001' with an amount of €20000\n"
 addResponse1=$(curl -s --header "Content-Type: application/json" --request POST --data '{"balance": "20000","accountNumber": "0000001"}' localhost:8080/api/account/addOrUpdate)
 
-printf "\nAdding Account '0000002' with a balance of €10000\n"
+printf "\nAdding Account '0000002' with an amount of €10000\n"
 addRespons2=$(curl -s --header "Content-Type: application/json" --request POST --data '{"balance": "10000","accountNumber": "0000002"}' localhost:8080/api/account/addOrUpdate)
 
 printf "\nGetting list of accounts within database now...\n"
